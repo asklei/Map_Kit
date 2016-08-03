@@ -43,6 +43,7 @@ NSString *const kDCTitle = @"Washington D.C.";
     self.map.region = [self.map regionThatFits:MKCoordinateRegionMake(newCoordinate, newSpan)];
     [self.map addAnnotations:[self createArrayOfCities]];
     [self.map showAnnotations:self.map.annotations animated:YES];
+    [self setResponseForUserTapAndHoldOnMapView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -67,6 +68,25 @@ NSString *const kDCTitle = @"Washington D.C.";
             break;
         default:
             break;
+    }
+}
+
+- (void)setResponseForUserTapAndHoldOnMapView {
+    UILongPressGestureRecognizer *tapAndHoldRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(dropPinAtUserTouch:)];
+    [self.map addGestureRecognizer:tapAndHoldRecognizer];
+}
+
+- (void)dropPinAtUserTouch:(UIGestureRecognizer *)gestureRecognizer {
+    //only add a pin when the long touch begins
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        //Get location of touch
+        CGPoint locationTouched = [gestureRecognizer locationInView:self.map];
+        //Get coordinate of touch
+        CLLocationCoordinate2D touchedCoordinate = [self.map convertPoint:locationTouched toCoordinateFromView:self.map];
+        //Create a pin
+        MKPointAnnotation *pointTouched = [[MKPointAnnotation alloc] init];
+        pointTouched.coordinate = touchedCoordinate;
+        [self.map addAnnotation:pointTouched];
     }
 }
 
