@@ -26,12 +26,17 @@
     [self.view addSubview:self.map];
     [self.view addSubview:self.segmentedControl];
     
+    self.map.delegate = self;
     [self.segmentedControl addTarget:self action:@selector(selectSegment:) forControlEvents:UIControlEventValueChanged];
     
     [self.segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_topLayoutGuide).offset(20);
         make.centerX.equalTo(self.view.mas_centerX);
     }];
+    
+    CLLocationCoordinate2D newCoordinate = CLLocationCoordinate2DMake(37.7746, -122.4186);
+    MKCoordinateSpan newSpan = MKCoordinateSpanMake(0.014, 0.01);
+    self.map.region = [self.map regionThatFits:MKCoordinateRegionMake(newCoordinate, newSpan)];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -57,6 +62,14 @@
         default:
             break;
     }
+}
+
+#pragma mark - MKMapViewDelegate
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    NSLog(@"After region change, latitude: %f", mapView.region.center.latitude);
+    NSLog(@"After region change, longitude%f", mapView.region.center.longitude);
+    NSLog(@"Span latitude delta after region change: %f", mapView.region.span.latitudeDelta);
+    NSLog(@"Span longitude delta after region change: %f", mapView.region.span.longitudeDelta);
 }
 
 
