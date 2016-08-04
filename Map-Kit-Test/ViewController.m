@@ -20,6 +20,7 @@
 NSString *const kNewYorkTitle = @"New York City";
 NSString *const kBostonTitle = @"Boston";
 NSString *const kDCTitle = @"Washington D.C.";
+typedef enum {StandardMap, HybridMap, SatelliteMap} MapType;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -57,13 +58,13 @@ NSString *const kDCTitle = @"Washington D.C.";
 
 - (void)selectSegment:(UIControlEvents)controlEvents{
     switch (self.segmentedControl.selectedSegmentIndex) {
-        case 0:
+        case StandardMap:
             self.map.mapType = MKMapTypeStandard;
             break;
-        case 1:
+        case HybridMap:
             self.map.mapType = MKMapTypeHybrid;
             break;
-        case 2:
+        case SatelliteMap:
             self.map.mapType = MKMapTypeSatellite;
             break;
         default:
